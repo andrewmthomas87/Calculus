@@ -3,6 +3,6 @@ import 'babel-polyfill'
 import React from 'react'
 import ReactDOM from 'react-dom'
 
-import EquationInput from './components/EquationInput'
+import RiemannSumCalculator from './components/RiemannSumCalculator'
 
-ReactDOM.render(<EquationInput />, document.querySelector('section#content'))
+ReactDOM.render(<RiemannSumCalculator />, document.querySelector('section#content'))
