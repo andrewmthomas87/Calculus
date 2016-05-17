@@ -56,7 +56,7 @@ class Information extends Component {
 		return (
 			<div className='information'>
 				{coordinate}
-				<span className='area'>Area - {Math.round(area * 10000) / 10000}</span>
+				<span className='area'>Area = {Math.round(area * 10000) / 10000}</span>
 			</div>
 		)
 	}
