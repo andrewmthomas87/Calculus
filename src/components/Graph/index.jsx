@@ -4,98 +4,61 @@ import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 class Graph extends Component {
 
 	static propTypes = {
-		equation: PropTypes.string.isRequired,
-		leftX: PropTypes.number.isRequired,
-		rightX: PropTypes.number.isRequired,
-		intervals: PropTypes.number.isRequired,
-		position: PropTypes.number.isRequired,
-		updateHovered: PropTypes.func.isRequired
+		yValues: PropTypes.array.isRequired,
+		definiteMin: PropTypes.number.isRequired,
+		definiteMax: PropTypes.number.isRequired,
+		updateHoverIndex: PropTypes.func.isRequired
 	}
 
 	_handleMouseEnter = (event) => {
-		const { updateHovered } = this.props
+		const { updateHoverIndex } = this.props
+		const index = parseInt(event.target.getAttribute('data-index'))
 
-		const xValue = parseFloat(event.target.getAttribute('data-x-value'))
-		updateHovered(true, xValue)
+		if (index || index === 0) {
+			updateHoverIndex(index)
+		}
 	}
 
 	_handleMouseLeave = (event) => {
-		const { updateHovered } = this.props
-		updateHovered(false)
+		const { updateHoverIndex } = this.props
+
+		updateHoverIndex(-1)
 	}
 
 	render() {
-		const { equation, leftX, rightX, intervals, position } = this.props
+		const { yValues, definiteMin, definiteMax } = this.props
 
-		if (!(equation && intervals)) {
-			return (
-				<section className='graph'>
-					<span className='error'>Riemann sum calculator</span>
-				</section>
-			)
+		let content
+
+		if (!yValues.length) {
+			content = <span className='error'>Riemann sum calculator</span>
 		}
+		else {
+			let temporaryMax = 0
+			const max = yValues.filter(value => {
+				const magnitude = Math.abs(value)
 
-		const values = []
-		const xValues = []
+				if (magnitude > temporaryMax) {
+					temporaryMax = magnitude
+					return true
+				}
 
-		let maxValue = 0
-		for (let i = 0; i < intervals; i++) {
-			let x
-			switch (position) {
-				case 1:
-					x = leftX + i * (rightX - leftX) / intervals
-					break;
-				case 2:
-					x = leftX + (i * 2 + 1) * (rightX - leftX) / (intervals * 2)
-					break;
-				case 3:
-					x = rightX - (intervals - i - 1) * (rightX - leftX) / intervals
-					break;
+				return false
+			}).pop()
+
+			if (max === Infinity) {
+				content = <span className='error'>Infinite value</span>
 			}
+			else {
+				let range = (definiteMax - definiteMin) * 1.2
+				const xAxisFromTop = (definiteMax + range / 10) / range
 
-			const value = eval(`var x = ${x}; ${equation}`)
-			if (Math.abs(value) > maxValue) {
-				maxValue = Math.abs(value)
-			}
-			xValues.push(x)
-			values.push(value)
-		}
-
-		if (maxValue === Infinity) {
-			return (
-				<section className='graph'>
-					<span className='error'>Infinite value</span>
-				</section>
-			)
-		}
-
-		let definiteMaxValue = 0, definiteMinValue = 0
-		for (let i = 0; i <= intervals * 2; i++) {
-			const x = leftX + i * (rightX - leftX) / (intervals * 2)
-			const value = eval(`var x = ${x}; ${equation}`)
-			if (value > definiteMaxValue) {
-				definiteMaxValue = value
-			}
-			else if (value < definiteMinValue) {
-				definiteMinValue = value
-			}
-		}
-
-		let range = definiteMaxValue - definiteMinValue
-		definiteMaxValue += range / 10
-		definiteMinValue -= range / 10
-
-		range *= 1.2
-		const xAxisFromTop = definiteMaxValue / range
-
-		return (
-			<section className='graph'>
-				{values.map((value, index) => {
+				content = yValues.map((value, index) => {
 					const style = {
-						width: `${100 / intervals}%`,
+						width: `${100 / yValues.length}%`,
 						height: `${100 * Math.abs(value) / range}%`,
-						left: `${index * 100 / intervals}%`,
-						backgroundColor: `rgb(78, ${Math.floor(205 - 23 * (index / intervals))}, ${Math.floor(164 + 41 * (index / intervals))})`
+						left: `${index * 100 / yValues.length}%`,
+						backgroundColor: `rgb(78, ${Math.floor(205 - 23 * (index / yValues.length))}, ${Math.floor(164 + 41 * (index / yValues.length))})`
 					}
 
 					if (value < 0) {
@@ -105,10 +68,12 @@ class Graph extends Component {
 						style.bottom = `${(1.0 - xAxisFromTop) * 100}%`
 					}
 
-					return <div key={index} className='box' style={style} data-x-value={xValues[index]} onMouseEnter={this._handleMouseEnter} onMouseLeave={this._handleMouseLeave}></div>
-				})}
-			</section>
-		)
+					return <div key={index} data-index={index} className='box' style={style} onMouseEnter={this._handleMouseEnter} onMouseLeave={this._handleMouseLeave}></div>
+				})
+			}
+		}
+
+		return <section className='graph'>{content}</section>
 	}
 
 }

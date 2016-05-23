@@ -11,62 +11,134 @@ class RiemannSumCalculator extends Component {
 	constructor(props) {
 		super(props)
 
-		this.state = {
-			equation: false,
-			leftX: 0,
-			rightX: 0,
-			intervals: 0,
-			position: 1,
-			hovered: false,
-			x: 0
+		this.equation = false
+		this.leftX = 0
+		this.rightX = 0
+		this.intervals = 0
+		this.position = 0
+		this.values = {
+			x: [],
+			y: []
 		}
+		this.definiteMin = 0
+		this.definiteMax = 0
+
+		this.state = {
+			values: {
+				x: [],
+				y: []
+			},
+			hoverIndex: -1
+		}
+	}
+
+	_updateValues(values, intervals, position) {
+		if (!(values.x.length && position !== null)) {
+			this.setState({
+				values: {
+					x: [],
+					y: []
+				},
+				hoverIndex: -1
+			})
+			return
+		}
+
+		const filteredValues = {
+			x: [],
+			y: []
+		}
+
+		for (let i = 0; i < intervals; i++) {
+			filteredValues.x.push(values.x[position + i * 2])
+			filteredValues.y.push(values.y[position + i * 2])
+		}
+
+		this.setState({
+			values: filteredValues,
+			hoverIndex: -1
+		})
+	}
+
+	_updateEquationValues(equation, leftX, rightX, intervals) {
+		if (!(equation && leftX !== null && rightX !== null && intervals)) {
+			this.values.x = []
+			this.values.y = []
+			this.definiteMin = 0
+			this.definiteMax = 0
+
+			this.setState({
+				values: {
+					x: [],
+					y: []
+				},
+				hoverIndex: -1
+			})
+			return
+		}
+
+		const x = []
+		const y = []
+		this.definiteMin = 0
+		this.definiteMax = 0
+
+		for (let i = 0; i < intervals * 2 + 1; i++) {
+			const xCoordinate = leftX + i * (rightX - leftX) / (intervals * 2)
+			const yCoordinate = eval(`var x = ${xCoordinate}; ${equation}`)
+
+			x.push(xCoordinate)
+			y.push(yCoordinate)
+
+			if (yCoordinate > this.definiteMax) {
+				this.definiteMax = yCoordinate
+			}
+			else if (yCoordinate < this.definiteMin) {
+				this.definiteMin = yCoordinate
+			}
+		}
+
+		this.values.x = x
+		this.values.y = y
+
+		this._updateValues(this.values, this.intervals, this.position)
 	}
 
 	_updateEquation = (equation) => {
-		this.setState({
-			equation: equation
-		})
+		this.equation = equation
+
+		this._updateEquationValues(equation, this.leftX, this.rightX, this.intervals)
 	}
 
 	_updateRangeIntervals = (leftX, rightX, intervals) => {
-		this.setState({
-			leftX: leftX,
-			rightX: rightX,
-			intervals: intervals
-		})
+		this.leftX = leftX
+		this.rightX = rightX
+		this.intervals = intervals
+
+		this._updateEquationValues(this.equation, leftX, rightX, intervals)
 	}
 
 	_updatePosition = (position) => {
+		this.position = position
+
+		this._updateValues(this.values, this.intervals, position)
+	}
+
+	_updateHoverIndex = (index) => {
 		this.setState({
-			position: position
+			hoverIndex: index
 		})
 	}
 
-	_updateHovered = (hovered, x) => {
-		if (!hovered) {
-			this.setState({
-				hovered: false,
-				x: 0
-			})
-		}
-		else {
-			this.setState({
-				hovered: true,
-				x: x
-			})
-		}
-	}
-
 	render() {
-		const { equation, leftX, rightX, intervals, position, hovered, x } = this.state
+		const { values, hoverIndex } = this.state
 
 		return (
 			<div>
 				<EquationInput updateEquation={this._updateEquation} />
 				<PositionSelect updatePosition={this._updatePosition} />
 				<RangeIntervalsInput updateRangeIntervals={this._updateRangeIntervals} />
-				<Graph equation={equation || ''} leftX={leftX} rightX={rightX} intervals={intervals} position={position} updateHovered={this._updateHovered} />
-				<Information hovered={hovered} x={x} equation={equation || ''} leftX={leftX} rightX={rightX} intervals={intervals} position={position} /> 
+				<Information values={values} leftX={this.leftX} rightX={this.rightX} hoverIndex={hoverIndex} />
+				<Graph yValues={values.y} definiteMin={this.definiteMin} definiteMax={this.definiteMax} updateHoverIndex={this._updateHoverIndex} />
 			</div>
 		)
 	}
