@@ -118,7 +118,7 @@ div.information {
 
 div.information span {
 	position: absolute;
-	bottom: 1em;
+	bottom: 0.625em;
 	color: #222;
 	font-size: 1.25em;
 	font-weight: 300;
