@@ -16,7 +16,7 @@ class Information extends Component {
 			return null
 		}
 
-		const area = values.y.map(value => value * (rightX - leftX) / values.x.length).reduce((previous, current) => previous + current)
+		const area = values.y.map(value => value * (rightX - leftX) / values.x.length).filter(value => !isNaN(value)).reduce((previous, current) => previous + current)
 
 		const coordinate = hoverIndex > -1 ? (
 			<span className='coordinate'>{`${Math.round(values.x[hoverIndex] * 10000) / 10000}, ${Math.round(values.y[hoverIndex] * 10000) / 10000}`}</span>

@@ -54,6 +54,10 @@ class Graph extends Component {
 				const xAxisFromTop = (definiteMax + range / 10) / range
 
 				content = yValues.map((value, index) => {
+					if (isNaN(value)) {
+						value = 0
+					}
+
 					const style = {
 						width: `${100 / yValues.length}%`,
 						height: `${100 * Math.abs(value) / range}%`,
