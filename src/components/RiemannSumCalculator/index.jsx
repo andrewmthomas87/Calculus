@@ -5,6 +5,7 @@ import PositionSelect from '../PositionSelect'
 import RangeIntervalsInput from '../RangeIntervalsInput'
 import Graph from '../Graph'
 import Information from '../Information'
+import About from '../About'
 
 class RiemannSumCalculator extends Component {
 
@@ -139,6 +140,7 @@ class RiemannSumCalculator extends Component {
 				<RangeIntervalsInput updateRangeIntervals={this._updateRangeIntervals} />
 				<Information values={values} leftX={this.leftX} rightX={this.rightX} hoverIndex={hoverIndex} />
 				<Graph yValues={values.y} definiteMin={this.definiteMin} definiteMax={this.definiteMax} updateHoverIndex={this._updateHoverIndex} />
+				<About />
 			</div>
 		)
 	}
