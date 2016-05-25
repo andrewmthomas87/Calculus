@@ -6,11 +6,12 @@ class Information extends Component {
 		values: PropTypes.object.isRequired,
 		leftX: PropTypes.number.isRequired,
 		rightX: PropTypes.number.isRequired,
+		equation: PropTypes.string.isRequired,
 		hoverIndex: PropTypes.number.isRequired
 	}
 
 	render() {
-		const { values, leftX, rightX, hoverIndex } = this.props
+		const { values, leftX, rightX, equation, hoverIndex } = this.props
 
 		if (!values.x.length) {
 			return null
@@ -25,6 +26,7 @@ class Information extends Component {
 		return (
 			<div className='information'>
 				{coordinate}
+				<span className='integral' data-left-x={Math.round(leftX * 10000) / 10000} data-right-x={Math.round(rightX * 10000) / 10000}>{equation}</span>
 				<span className='area'>Area = {Math.round(area * 10000) / 10000}</span>
 			</div>
 		)

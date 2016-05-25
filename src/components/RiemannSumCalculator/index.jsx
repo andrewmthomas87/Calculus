@@ -13,6 +13,7 @@ class RiemannSumCalculator extends Component {
 		super(props)
 
 		this.equation = false
+		this.prettyEquation = false
 		this.leftX = 0
 		this.rightX = 0
 		this.intervals = 0
@@ -104,8 +105,9 @@ class RiemannSumCalculator extends Component {
 		this._updateValues(this.values, this.intervals, this.position)
 	}
 
-	_updateEquation = (equation) => {
+	_updateEquation = (equation, prettyEquation) => {
 		this.equation = equation
+		this.prettyEquation = prettyEquation
 
 		this._updateEquationValues(equation, this.leftX, this.rightX, this.intervals)
 	}
@@ -138,7 +140,7 @@ class RiemannSumCalculator extends Component {
 				<EquationInput updateEquation={this._updateEquation} />
 				<PositionSelect updatePosition={this._updatePosition} />
 				<RangeIntervalsInput updateRangeIntervals={this._updateRangeIntervals} />
-				<Information values={values} leftX={this.leftX} rightX={this.rightX} hoverIndex={hoverIndex} />
+				<Information values={values} leftX={this.leftX} rightX={this.rightX} equation={this.prettyEquation} hoverIndex={hoverIndex} />
 				<Graph yValues={values.y} definiteMin={this.definiteMin} definiteMax={this.definiteMax} updateHoverIndex={this._updateHoverIndex} />
 				<About />
 			</div>

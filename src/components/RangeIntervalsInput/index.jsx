@@ -27,6 +27,19 @@ class RangeIntervalsInput extends Component {
 			let rightX = parseFloat(rightXValue)
 			const intervals = parseInt(intervalsValue)
 
+			if (leftXValue === 'pi') {
+				leftX = 1
+			}
+			else if (leftXValue === '-pi') {
+				leftX = -1
+			}
+			if (rightXValue === 'pi') {
+				rightX = 1
+			}
+			else if (rightXValue === '-pi') {
+				rightX = -1
+			}
+
 			if (leftX != rightX && !(isNaN(leftX) || isNaN(rightX)) && intervals > 0) {
 				if (leftXValue.endsWith('pi')) {
 					leftX *= Math.PI
@@ -79,7 +92,7 @@ class RangeIntervalsInput extends Component {
 			<div className={`range-intervals-input${valid ? ' valid' : ''}`}>
 				<input type='text' placeholder='Left x' onChange={this._updateRangeIntervals} ref='leftX' onKeyDown={this._submitRangeIntervals} />
 				<input type='text' placeholder='Right x' onChange={this._updateRangeIntervals} ref='rightX' onKeyDown={this._submitRangeIntervals} />
-				<input type='text' placeholder='Intervals' onChange={this._updateRangeIntervals} ref='intervals' onKeyDown={this._submitRangeIntervals} />
+				<input type='number' placeholder='Intervals' onChange={this._updateRangeIntervals} ref='intervals' onKeyDown={this._submitRangeIntervals} />
 			</div>
 		)
 	}

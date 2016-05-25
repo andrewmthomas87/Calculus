@@ -68,8 +68,24 @@ section.overlay div.about {
 	max-width: 95%;
 	height: 95%;
 	background-color: #fff;
+	overflow-y: auto;
 	cursor: auto;
-	transform: translate(-50%, -50%);
+	-webkit-transform: translate(-50%, -50%);
+	        transform: translate(-50%, -50%);
+}
+
+section.overlay div.about span.close {
+	position: absolute;
+	top: 1.5em;
+	right: 1.75em;
+	color: #fff;
+	font-size: 1.5em;
+	font-weight: 100;
+	cursor: pointer;
+}
+
+section.overlay div.about span.close:before {
+	content: '\2715';
 }
 
 section.overlay div.about h1 {
@@ -120,11 +136,20 @@ section.overlay div.about div.page p span {
 	color: #4ecdc4;
 }
 
+section.overlay div.about div.page p span.red {
+	color: #ff6b6b;
+}
+
 section.overlay div.about div.page p img {
 	display: block;
-	width: 50em;
-	max-width: 80%;
+	width: 45em;
+	max-width: 100%;
 	margin: 1em auto;
+}
+
+section.overlay div.about div.page p a {
+	color: #4ecdc4;
+	text-decoration: none;
 }
 
 span#question:hover {
@@ -212,6 +237,7 @@ div.information {
 	bottom: 0;
 	left: 0;
 	right: 0;
+	z-index: 50;
 }
 
 div.information span {
@@ -224,6 +250,34 @@ div.information span {
 
 div.information span.area {
 	right: 1em;
+}
+
+div.information span.integral {
+	bottom: 1.5em;
+	right: 50%;
+	font-size: 1em;
+	-webkit-transform: translate(50%, 0);
+	        transform: translate(50%, 0);
+}
+
+div.information span.integral:before {
+	content: '\222B';
+	position: absolute;
+	top: -0.333em;
+	left: -0.625em;
+	color: #555;
+	font-size: 2.5em;
+}
+
+div.information span.integral:after {
+	content: attr(data-right-x) '\A' attr(data-left-x);
+	position: absolute;
+	top: -2.375em;
+	left: -0.75em;
+	color: #555;
+	line-height: 3.25em;
+	font-size: 0.75em;
+	white-space: pre;
 }
 
 div.information span.coordinate {

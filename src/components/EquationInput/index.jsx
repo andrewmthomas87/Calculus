@@ -220,7 +220,7 @@ class EquationInput extends Component {
 				}
 			}
 
-			updateEquation(valid ? equation : false)
+			updateEquation(valid ? equation : false, valid ? newValue : false)
 
 			this.setState({
 				value: newValue,
@@ -228,7 +228,7 @@ class EquationInput extends Component {
 			})
 		}
 		else {
-			updateEquation(false)
+			updateEquation(false, false)
 		}
 	}
 
